@@ -12,7 +12,7 @@ You must have Python 3.x installed. You will need to install any other outstandi
 | --- | --- |
 | `hashcat` | Install via [brew](https://brew.sh) by running `brew install hashcat`|
 | `mergecap` | Comes with the [Wireshark](https://www.wireshark.org) application (v2.6.12) |
-| `./hashcat-utils/src/cap2hccapx.bin` | Clone the [repository] then run `make` from inside `src` |
+| `./hashcat-utils/src/cap2hccapx.bin` | Clone the [repository](https://github.com/hashcat/hashcat-utils) then run `make` from inside `src` |
 
 ## Usage
 
