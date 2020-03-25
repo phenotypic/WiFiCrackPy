@@ -11,6 +11,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-w')
 parser.add_argument('-m')
 parser.add_argument('-i')
+parser.add_argument('-p')
 args = parser.parse_args()
 
 
@@ -83,7 +84,9 @@ def crack_capture():
     if method == 1:
         subprocess.run(['hashcat', '-m', '2500', 'capture.hccapx', wordlist])
     elif method == 2:
-        pattern = input('\nInput a brute-force pattern: ')
+        pattern = args.p
+        if args.p is None:
+            pattern = input('\nInput a brute-force pattern: ')
         subprocess.run(['hashcat', '-m', '2500', '-a', '3', 'capture.hccapx', pattern])
 
 
