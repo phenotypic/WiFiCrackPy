@@ -65,7 +65,7 @@ def capture_network(bssid, ssid, channel):
     convert = '0'
     while convert == '0':
         subprocess.run(['mergecap', '-a', '-F', 'pcap', '-w', 'capture.cap', 'beacon.cap', 'handshake.cap'], stderr=subprocess.PIPE)
-        convert = subprocess.run([expanduser("~") + '/hashcat-utils/src/cap2hccapx.bin capture.cap capture.hccapx ' + '"' + ssid + '"'], shell=True, stdout=subprocess.PIPE)
+        convert = subprocess.run([expanduser('~') + '/hashcat-utils/src/cap2hccapx.bin capture.cap capture.hccapx ' + '"' + ssid + '"'], shell=True, stdout=subprocess.PIPE)
         convert = convert.stdout.decode('utf-8').replace('Written', ' Written').split(' ')
         convert = convert[convert.index('Written') + 1]
         time.sleep(1)
