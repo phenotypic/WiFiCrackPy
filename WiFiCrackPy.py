@@ -1,9 +1,11 @@
 import subprocess
 import time
 import argparse
+import re
 from prettytable import PrettyTable
 from tabulate import tabulate
 from os.path import expanduser
+from pyfiglet import Figlet
 
 airport = '/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport'
 
@@ -16,7 +18,7 @@ args = parser.parse_args()
 
 
 def scan_networks():
-    scan = subprocess.run([airport, '-s'], stdout=subprocess.PIPE)
+    scan = subprocess.run(['sudo', airport, '-s'], stdout=subprocess.PIPE)
     scan = scan.stdout.decode('utf-8')
     scan = scan.split('\n')
     count = len(scan) - 1
@@ -25,14 +27,16 @@ def scan_networks():
     list = PrettyTable(['Number', 'Name', 'BSSID', 'RSSI', 'Channel'])
     networks = {}
     for i in range(1, count):
+        bssid = re.search('(?:[0-9a-fA-F]:?){12}', ' '.join(scan[i])).group(0)
+        bindex = scan[i].index(bssid)
+
         network = {}
-        network['ssid'] = scan[i][0]
-        network['bssid'] = scan[i][1]
-        network['rssi'] = scan[i][2]
-        network['channel'] = scan[i][3].split(',')[0]
+        network['ssid'] = ' '.join(scan[i][0:bindex])
+        network['bssid'] = bssid
+        network['rssi'] = scan[i][bindex + 1]
+        network['channel'] = scan[i][bindex + 2].split(',')[0]
 
         networks[i] = network
-
         list.add_row([i, network['ssid'], network['bssid'], network['rssi'], network['channel']])
 
     print(list)
@@ -90,4 +94,6 @@ def crack_capture():
         subprocess.run(['hashcat', '-m', '2500', '-a', '3', 'capture.hccapx', pattern])
 
 
+f = Figlet(font='big')
+print('\n' + f.renderText('WiFiCrackPy'))
 scan_networks()
