@@ -96,4 +96,5 @@ def crack_capture():
 
 f = Figlet(font='big')
 print('\n' + f.renderText('WiFiCrackPy'))
+
 scan_networks()
