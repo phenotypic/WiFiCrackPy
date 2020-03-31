@@ -60,7 +60,7 @@ def capture_network(bssid, ssid, channel):
 
     handshake = subprocess.Popen(['sudo', 'tcpdump', 'ether proto 0x888e and ether host ' + bssid, '-I', '-U', '-i', 'en0', '-w', 'handshake.cap'], stderr=subprocess.PIPE)
     print('\nWaiting for handshake...')
-    time.sleep(2)
+    time.sleep(5)
 
     convert = '0'
     while convert == '0':
@@ -76,7 +76,7 @@ def capture_network(bssid, ssid, channel):
 
 
 def crack_capture():
-    method = args.m
+    method = int(args.m)
     if args.m is None:
         print(tabulate([[1, 'Dictionary'], [2, 'Brute-force']], headers=['Number', 'Mode']))
         method = int(input('\nSelect an attack mode: '))
