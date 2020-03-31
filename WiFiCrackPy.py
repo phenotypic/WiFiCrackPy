@@ -60,14 +60,14 @@ def capture_network(bssid, ssid, channel):
 
     handshake = subprocess.Popen(['sudo', 'tcpdump', 'ether proto 0x888e and ether host ' + bssid, '-I', '-U', '-i', 'en0', '-w', 'handshake.cap'], stderr=subprocess.PIPE)
     print('\nWaiting for handshake...')
-    time.sleep(5)
 
     convert = '0'
     while convert == '0':
         subprocess.run(['mergecap', '-a', '-F', 'pcap', '-w', 'capture.cap', 'beacon.cap', 'handshake.cap'], stderr=subprocess.PIPE)
         convert = subprocess.run([expanduser('~') + '/hashcat-utils/src/cap2hccapx.bin capture.cap capture.hccapx ' + '"' + ssid + '"'], shell=True, stdout=subprocess.PIPE)
         convert = convert.stdout.decode('utf-8').replace('Written', ' Written').split(' ')
-        convert = convert[convert.index('Written') + 1]
+        if 'Written' in convert:
+            convert = convert[convert.index('Written') + 1]
         time.sleep(1)
 
     subprocess.run(['sudo', 'kill', str(handshake.pid)])
