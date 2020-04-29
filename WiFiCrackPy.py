@@ -14,6 +14,7 @@ parser.add_argument('-w')
 parser.add_argument('-m')
 parser.add_argument('-i')
 parser.add_argument('-p')
+parser.add_argument('-o', action='store_true')
 args = parser.parse_args()
 
 
@@ -89,12 +90,12 @@ def crack_capture():
         wordlist = input('\nInput a wordlist path: ')
 
     if method == 1:
-        subprocess.run(['hashcat', '-m', '2500', 'capture.hccapx', wordlist])
+        subprocess.run(['hashcat', '-m', '2500', 'capture.hccapx', wordlist, '-O'][:1 + args.o]])
     elif method == 2:
         pattern = args.p
         if args.p is None:
             pattern = input('\nInput a brute-force pattern: ')
-        subprocess.run(['hashcat', '-m', '2500', '-a', '3', 'capture.hccapx', pattern])
+        subprocess.run(['hashcat', '-m', '2500', '-a', '3', 'capture.hccapx', pattern, '-O'][:1 + args.o])
 
 
 f = Figlet(font='big')
