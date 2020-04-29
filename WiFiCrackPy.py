@@ -19,14 +19,14 @@ args = parser.parse_args()
 
 def scan_networks():
     print('Scanning for networks...\n')
-    
+
     scan = subprocess.run(['sudo', airport, '-s'], stdout=subprocess.PIPE)
     scan = scan.stdout.decode('utf-8')
     scan = scan.split('\n')
     count = len(scan) - 1
     scan = [o.split() for o in scan]
 
-    list = PrettyTable(['Number', 'Name', 'BSSID', 'RSSI', 'Channel'])
+    list = PrettyTable(['Number', 'Name', 'BSSID', 'RSSI', 'Channel', 'Security'])
     networks = {}
     for i in range(1, count):
         bssid = re.search('(?:[0-9a-fA-F]:?){12}', ' '.join(scan[i])).group(0)
@@ -37,9 +37,10 @@ def scan_networks():
         network['bssid'] = bssid
         network['rssi'] = scan[i][bindex + 1]
         network['channel'] = scan[i][bindex + 2].split(',')[0]
+        network['security'] = scan[i][bindex + 5].split('(')[0]
 
         networks[i] = network
-        list.add_row([i, network['ssid'], network['bssid'], network['rssi'], network['channel']])
+        list.add_row([i, network['ssid'], network['bssid'], network['rssi'], network['channel'], network['security']])
 
     print(list)
 
