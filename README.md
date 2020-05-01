@@ -34,7 +34,7 @@ The script is fairly easy to use, simply run it using the command above and ente
 | --- | --- |
 | `-w <wordlist>` | Wordlist: Define a wordlist path (script will prompt you otherwise) |
 | `-i <interface>` | Interface: Set Wi-Fi interface (script can auto-detect default interface) |
-| `-m <method>` | Method: Define the attack method (`1`: dictionary, `2`: brute-force) (script will prompt you otherwise) |
+| `-m <method>` | Method: Define the attack method (script will prompt you otherwise) |
 | `-p <pattern>` | Pattern: Define a brute-force pattern in advance (script will prompt you if required otherwise) |
 
 After running the script, you will be asked to choose a network to crack
