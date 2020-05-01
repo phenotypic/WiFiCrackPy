@@ -90,7 +90,7 @@ def crack_capture():
         wordlist = input('\nInput a wordlist path: ')
 
     if method == 1:
-        subprocess.run(['hashcat', '-m', '2500', 'capture.hccapx', wordlist, '-O'][:1 + args.o]])
+        subprocess.run(['hashcat', '-m', '2500', 'capture.hccapx', wordlist, '-O'][:1 + args.o])
     elif method == 2:
         pattern = args.p
         if args.p is None:
