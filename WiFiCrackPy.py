@@ -14,7 +14,6 @@ parser.add_argument('-w')
 parser.add_argument('-m')
 parser.add_argument('-i')
 parser.add_argument('-p')
-parser.add_argument('-o', action='store_true')
 args = parser.parse_args()
 
 
@@ -67,12 +66,12 @@ def capture_network(bssid, ssid, channel):
 
     convert = '0'
     while convert == '0':
+        time.sleep(3)
         subprocess.run(['mergecap', '-a', '-F', 'pcap', '-w', 'capture.cap', 'beacon.cap', 'handshake.cap'], stderr=subprocess.PIPE)
         convert = subprocess.run([expanduser('~') + '/hashcat-utils/src/cap2hccapx.bin capture.cap capture.hccapx ' + '"' + ssid + '"'], shell=True, stdout=subprocess.PIPE)
         convert = convert.stdout.decode('utf-8').replace('Written', ' Written').split(' ')
         if 'Written' in convert:
             convert = convert[convert.index('Written') + 1]
-        time.sleep(1)
 
     subprocess.run(['sudo', 'kill', str(handshake.pid)])
     print('\nHandshake captured!\n')
@@ -80,23 +79,27 @@ def capture_network(bssid, ssid, channel):
 
 
 def crack_capture():
-    method = int(args.m)
     if args.m is None:
-        print(tabulate([[1, 'Dictionary'], [2, 'Brute-force']], headers=['Number', 'Mode']))
+        print(tabulate([[1, 'Dictionary'], [2, 'Brute-force'], [3, 'Manual']], headers=['Number', 'Mode']))
         method = int(input('\nSelect an attack mode: '))
+    else:
+        method = int(args.m)
 
-    wordlist = args.w
     if method == 1 and args.w is None:
         wordlist = input('\nInput a wordlist path: ')
+    elif method == 1 and args.w is not None:
+        wordlist = args.w
 
     if method == 1:
-        subprocess.run(['hashcat', '-m', '2500', 'capture.hccapx', wordlist, '-O'][:1 + args.o])
+        subprocess.run(['hashcat', '-m', '2500', 'capture.hccapx', wordlist, '-O'])
     elif method == 2:
-        pattern = args.p
         if args.p is None:
             pattern = input('\nInput a brute-force pattern: ')
-        subprocess.run(['hashcat', '-m', '2500', '-a', '3', 'capture.hccapx', pattern, '-O'][:1 + args.o])
-
+        else:
+            pattern = args.p
+        subprocess.run(['hashcat', '-m', '2500', '-a', '3', 'capture.hccapx', pattern, '-O'])
+    elif method == 3:
+        print('\nRun hashcat against: capture.hccapx')
 
 f = Figlet(font='big')
 print('\n' + f.renderText('WiFiCrackPy'))
