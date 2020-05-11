@@ -52,11 +52,12 @@ def capture_network(bssid, ssid, channel):
     subprocess.run(['sudo', airport, '-z'])
     subprocess.run(['sudo', airport, '-c' + channel])
 
-    iface = args.i
     if args.i is None:
         iface = subprocess.run(['networksetup', '-listallhardwareports'], stdout=subprocess.PIPE)
         iface = iface.stdout.decode('utf-8').split('\n')
         iface = iface[iface.index('Hardware Port: Wi-Fi') + 1].split(': ')[1]
+    else:
+        iface = args.i
 
     subprocess.run(['sudo', 'tcpdump', 'type mgt subtype beacon and ether src ' + bssid, '-I', '-c', '1', '-i', iface, '-w', 'beacon.cap'], stderr=subprocess.PIPE)
     print('\nCaptured beacon frame...')
