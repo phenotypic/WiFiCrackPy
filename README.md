@@ -6,7 +6,7 @@ WiFiCrackPy has been developed as the successor of [WiFiCrack](https://github.co
 
 ## Prerequisites
 
-You must have Python 3.x installed. You will need to install any other outstanding requirements:
+You must have Python 3 installed. You will need to install any other outstanding requirements:
 
 | Command | Installation |
 | --- | --- |
@@ -46,9 +46,3 @@ Once a handshake is captured, WiFiCrackPy will initialise `hashcat` to extract t
 ## To-do list
 
 - [ ] Integrate deauthentication attack into main script
-
-## Removal
-
-```
-sudo rm -r ~/WiFiCrackPy
-```
