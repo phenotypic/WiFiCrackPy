@@ -22,7 +22,7 @@ git clone https://github.com/Tommrodrigues/WiFiCrackPy.git
 pip3 install ~/WiFiCrackPy/requirements.txt
 ```
 
-Run the script with:
+Run with:
 ```
 python3 WiFiCrackPy.py
 ```
