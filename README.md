@@ -1,8 +1,8 @@
 # WiFiCrackPy
 
-WiFiCrackPy demonstrates of some of the security flaws associated with WPA(2) networks by demonstrating simple and efficient cracking. It captures the necessary Wi-Fi packets associated with with WPA(2) handshakes and then utilises [hashcat](https://github.com/hashcat/hashcat) to attempt to extract the hashed passkey. The script is for educational purposes and should not be misused.
+WiFiCrackPy demonstrates of some of the security flaws associated with WPA(2) networks by performing simple and efficient cracking. It captures the necessary Wi-Fi packets associated with with WPA(2) handshakes and then utilises [hashcat](https://github.com/hashcat/hashcat) to attempt to extract the hashed passkey. The script is for educational purposes and should not be misused.
 
-WiFiCrackPy has been developed as the successor of [WiFiCrack](https://github.com/Tommrodrigues/WiFiCrack) which is written in bash. The script is much more streamlined and reliable than its predecessor, and has some additional functionality.
+WiFiCrackPy has been developed as the successor of [WiFiCrack](https://github.com/Tommrodrigues/WiFiCrack) which is written in bash. The script is much more streamlined and reliable than its predecessor with some additional functionality.
 
 ## Prerequisites
 
