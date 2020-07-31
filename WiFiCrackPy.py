@@ -102,6 +102,7 @@ def crack_capture():
     elif method == 3:
         print('\nRun hashcat against: capture.hccapx')
 
+
 f = Figlet(font='big')
 print('\n' + f.renderText('WiFiCrackPy'))
 
