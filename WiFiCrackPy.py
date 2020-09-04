@@ -29,7 +29,7 @@ def scan_networks():
     list = PrettyTable(['Number', 'Name', 'BSSID', 'RSSI', 'Channel', 'Security'])
     networks = {}
     for i in range(1, count):
-        bssid = re.search('(?:[0-9a-fA-F]:?){12}', ' '.join(scan[i])).group(0)
+        bssid = re.search('([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})', ' '.join(scan[i])).group(0)
         bindex = scan[i].index(bssid)
 
         network = {}
