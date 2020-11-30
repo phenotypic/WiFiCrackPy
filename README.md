@@ -19,7 +19,7 @@ You must have Python 3 installed. You will need to install any other outstanding
 Download with:
 ```
 git clone https://github.com/Tommrodrigues/WiFiCrackPy.git
-pip3 install ~/WiFiCrackPy/requirements.txt
+pip3 install -r ~/WiFiCrackPy/requirements.txt
 ```
 
 Run from same directory with:
