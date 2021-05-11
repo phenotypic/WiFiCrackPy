@@ -59,7 +59,7 @@ def capture_network(bssid, ssid, channel):
         iface = args.i
 
     subprocess.run(['sudo', expanduser('~') + '/zizzania/src/zizzania', '-i', iface, '-b', bssid, '-w', 'capture.pcap'], stderr=subprocess.PIPE)
-    subprocess.run([expanduser('~') + '/hashcat-utils/src/cap2hccapx.bin capture.pcap capture.hccapx'], stderr=subprocess.PIPE)
+    subprocess.run([expanduser('~') + '/hashcat-utils/src/cap2hccapx.bin', 'capture.pcap', 'capture.hccapx'], stderr=subprocess.PIPE)
 
     print('\nHandshake captured!\n')
     crack_capture()
