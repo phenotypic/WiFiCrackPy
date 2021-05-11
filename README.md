@@ -4,7 +4,7 @@ WiFiCrackPy demonstrates some of the security flaws associated with WPA(2) netwo
 
 There are two independent scripts included in this repository. The first, `WiFiCrackPy.py`, captures the necessary Wi-Fi packets associated with WPA(2) handshakes and then utilises [hashcat](https://github.com/hashcat/hashcat) to attempt to extract the hashed passkey.
 
-The second script, `WiFiCrackPy-DeAuth.py`, is a slightly modified version of the first, and can speed up the process of packet capturing by utilising [`zizzania`](https://github.com/cyrus-and/zizzania) to send DeAuth frames to the stations whose handshake is needed. As such, this script is superior to the first, but there are compatibility issues with newer Mac models including all Apple Silicon MacBooks.
+The second script, `WiFiCrackPy-DeAuth.py`, is a slightly modified version of the first, and can speed up the process of packet capturing by utilising [`zizzania`](https://github.com/cyrus-and/zizzania) to send DeAuth frames to the stations whose handshake is needed. As such, this script is superior to the first, but there are compatibility issues with newer devices including all Apple silicon MacBooks.
 
 ## Prerequisites
 
