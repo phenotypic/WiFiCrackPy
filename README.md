@@ -1,18 +1,26 @@
 # WiFiCrackPy
 
-WiFiCrackPy demonstrates of some of the security flaws associated with WPA(2) networks by performing simple and efficient cracking. It captures the necessary Wi-Fi packets associated with with WPA(2) handshakes and then utilises [hashcat](https://github.com/hashcat/hashcat) to attempt to extract the hashed passkey. The script is for educational purposes and should not be misused.
+WiFiCrackPy demonstrates some of the security flaws associated with WPA(2) networks by performing simple and efficient cracking, and has been developed as the successor of [WiFiCrack](https://github.com/Tommrodrigues/WiFiCrack). The tool is for educational purposes and should not be misused.
 
-WiFiCrackPy has been developed as the successor of [WiFiCrack](https://github.com/Tommrodrigues/WiFiCrack) which is written in bash. The script is much more streamlined and reliable than its predecessor with some additional functionality.
+There are two independent scripts included in this repository. The first, `WiFiCrackPy.py`, captures the necessary Wi-Fi packets associated with WPA(2) handshakes and then utilises [hashcat](https://github.com/hashcat/hashcat) to attempt to extract the hashed passkey.
+
+The second script, `WiFiCrackPy-DeAuth.py`, is a slightly modified version of the first, and can speed up the process of packet capturing by utilising [`zizzania`](https://github.com/cyrus-and/zizzania) to send DeAuth frames to the stations whose handshake is needed. As such, this script is superior to the first, but there are compatibility issues with newer Mac models including all Apple Silicon MacBooks.
 
 ## Prerequisites
 
-You must have Python 3 installed. You will need to install any other outstanding requirements:
+You must have `python3` installed. You will need to install any other outstanding requirements:
 
 | Command | Installation |
 | --- | --- |
-| `hashcat` | Install via [brew](https://brew.sh) by running `brew install hashcat` |
-| `mergecap` | Install via [brew](https://brew.sh) by running `brew install wireshark` |
-| `./hashcat-utils/src/cap2hccapx.bin` | Clone the [repository](https://github.com/hashcat/hashcat-utils) then run `make` from inside `src` |
+| `hashcat`, `mergecap` | Install via [brew](https://brew.sh) by running `brew install hashcat wireshark` |
+| `~/hashcat-utils/src/cap2hccapx.bin` | Clone the [repository](https://github.com/hashcat/hashcat-utils) then run `make` from inside `src` |
+
+Only needed for `WiFiCrackPy-DeAuth.py`:
+
+| Command | Installation |
+| --- | --- |
+| `libpcap`, `wget` | Install via [brew](https://brew.sh) by running `brew install libpcap wget` |
+| `~/zizzania/src/zizzania` | Clone the [repository](https://github.com/cyrus-and/zizzania) then run `make -f config.Makefile && ` from inside `src` |
 
 ## Usage
 
@@ -22,7 +30,7 @@ git clone https://github.com/Tommrodrigues/WiFiCrackPy.git
 pip3 install -r ~/WiFiCrackPy/requirements.txt
 ```
 
-Run from same directory with:
+Run from the same directory with:
 ```
 python3 WiFiCrackPy.py
 ```
@@ -38,10 +46,8 @@ The script is fairly easy to use, simply run it using the command above and ente
 
 After running the script, you will be asked to choose a network to crack
 
-Following the selection of a network, you may have to wait for a while until a handshake occurs on the target network (i.e. for a device to (re)connect to the network), but this can be hastened by performing a [deauthentication attack](https://en.wikipedia.org/wiki/Wi-Fi_deauthentication_attack).
+Following the selection of a network, if you are using `WiFiCrackPy.py`, you may have to wait for a while until a handshake occurs naturally on the target network (i.e. for a device to (re)connect to the network), but this process is forced when using `WiFiCrackPy-DeAuth.py`, which should be much quicker.
 
-Once a handshake is captured, WiFiCrackPy will initialise `hashcat` to extract the Wi-Fi password. This step may take a while depending on a number of factors including your processing power. If successful you will be presented with the password. WiFiCrackPy will retain the handshake in its directory if you would like to perform another type of attack against the capture.
+Once a handshake is captured, `hashcat` will be initialised to extract the Wi-Fi password. This step may take a while depending on several factors including your machine's processing power. Once successful, you will be presented with the password.
 
-## To-do list
-
-- [ ] Integrate deauthentication attack into main script
+WiFiCrackPy will retain the handshake in its directory if you would like to perform another type of attack against the capture.
