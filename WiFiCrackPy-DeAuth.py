@@ -83,7 +83,7 @@ def crack_capture():
         else:
             pattern = args.p
         subprocess.run(['hashcat', '-m', '2500', '-a', '3', 'capture.hccapx', pattern, '-O'])
-    elif method == 3:
+    else:
         print('\nRun hashcat against: capture.hccapx')
 
 
