@@ -20,14 +20,14 @@ Only needed for `WiFiCrackPy-DeAuth.py`:
 | Command | Installation |
 | --- | --- |
 | `libpcap`, `wget` | Install via [brew](https://brew.sh) by running `brew install libpcap wget` |
-| `~/zizzania/src/zizzania` | Clone [this](https://github.com/cyrus-and/zizzania) repository then run `make -f config.Makefile && ` from inside `src` |
+| `~/zizzania/src/zizzania` | Clone [this](https://github.com/cyrus-and/zizzania) repository then run `make -f config.Makefile && make` from the same directory |
 
 ## Usage
 
 Download with:
 ```
 git clone https://github.com/Tommrodrigues/WiFiCrackPy.git
-pip3 install -r ~/WiFiCrackPy/requirements.txt
+pip3 install -r requirements.txt
 ```
 
 Run from the same directory with:
