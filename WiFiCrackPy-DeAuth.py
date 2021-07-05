@@ -13,6 +13,7 @@ parser.add_argument('-w')
 parser.add_argument('-m')
 parser.add_argument('-i')
 parser.add_argument('-p')
+parser.add_argument('-d', action='store_false')
 args = parser.parse_args()
 
 
@@ -57,7 +58,9 @@ def capture_network(bssid, ssid, channel):
     else:
         iface = args.i
 
-    subprocess.run(['sudo', expanduser('~') + '/zizzania/src/zizzania', '-i', iface, '-b', bssid, '-w', 'capture.pcap'], stderr=subprocess.PIPE)
+    print('\nInitiating zizzania to capture handshake...\n')
+
+    subprocess.run(['sudo', expanduser('~') + '/zizzania/src/zizzania', '-i', iface, '-b', bssid, '-w', 'capture.pcap'] + ['-n'] * args.d)
     subprocess.run([expanduser('~') + '/hashcat-utils/src/cap2hccapx.bin', 'capture.pcap', 'capture.hccapx'], stderr=subprocess.PIPE)
 
     crack_capture()
