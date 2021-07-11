@@ -12,7 +12,7 @@ You must have `python3` installed. You will need to install any other outstandin
 
 | Command | Installation |
 | --- | --- |
-| `hashcat`, `libpcap`, `wget` | Install via [brew](https://brew.sh) by running `brew install hashcat libpcap wget` |
+| `hashcat`, `libpcap`, `wget`, `mergecap` | Install via [brew](https://brew.sh) by running `brew install hashcat libpcap wget wireshark` |
 | `~/hashcat-utils/src/cap2hccapx.bin` | Clone [this](https://github.com/hashcat/hashcat-utils) repository then run `make` from inside `src` |
 | `~/zizzania/src/zizzania` | Clone [this](https://github.com/cyrus-and/zizzania) repository then run `make -f config.Makefile && make` from the same directory |
 
