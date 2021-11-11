@@ -46,3 +46,7 @@ Following the selection of a network, you may have to wait for a while for a han
 Once a handshake is captured, `hashcat` will be initialised to extract the Wi-Fi password. This step may take quite a while depending on several factors including your machine's processing power and the attack method chosen. If successfull, you will be presented with the password for the target network.
 
 WiFiCrackPy will retain the handshake in its directory if you would like to perform another type of attack against the capture.
+
+## To-do
+
+- [ ] Replace `2500` with `22000` hash mode for `hashcat` as per [this article](https://hashcat.net/forum/thread-10253.html)
