@@ -14,6 +14,7 @@ parser.add_argument('-m')
 parser.add_argument('-i')
 parser.add_argument('-p')
 parser.add_argument('-d', action='store_false')
+parser.add_argument('-O', action='store_false')
 args = parser.parse_args()
 
 
@@ -62,7 +63,7 @@ def capture_network(bssid, ssid, channel):
 
     subprocess.run(['sudo', expanduser('~') + '/zizzania/src/zizzania', '-i', iface, '-b', bssid, '-w', 'capture.pcap', '-q'] + ['-n'] * args.d)
 
-    subprocess.run([expanduser('~') + '/hashcat-utils/src/cap2hccapx.bin', 'capture.pcap', 'capture.hccapx'], stdout=subprocess.PIPE)
+    subprocess.run(['hcxpcapngtool', '-o', 'capture.hc22000', 'capture.pcap'], stdout=subprocess.PIPE)
 
     print('\nHandshake ready for cracking...\n')
 
@@ -82,15 +83,15 @@ def crack_capture():
         wordlist = args.w
 
     if method == 1:
-        subprocess.run(['hashcat', '-m', '2500', 'capture.hccapx', wordlist, '-O'])
+        subprocess.run(['hashcat', '-m', '22000', 'capture.hc22000', wordlist] + ['-O'] * args.O)
     elif method == 2:
         if args.p is None:
             pattern = input('\nInput a brute-force pattern: ')
         else:
             pattern = args.p
-        subprocess.run(['hashcat', '-m', '2500', '-a', '3', 'capture.hccapx', pattern, '-O'])
+        subprocess.run(['hashcat', '-m', '22000', '-a', '3', 'capture.hc22000', pattern] + ['-O'] * args.O)
     else:
-        print('\nRun hashcat against: capture.hccapx')
+        print('\nRun hashcat against: capture.hc22000')
 
 
 f = Figlet(font='big')
