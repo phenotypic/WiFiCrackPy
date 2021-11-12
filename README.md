@@ -49,4 +49,4 @@ WiFiCrackPy will retain the handshake in its directory if you would like to perf
 
 ## To-do
 
-- [ ] Replace `2500` with `22000` hash mode for `hashcat` as per [this article](https://hashcat.net/forum/thread-10253.html)
+- [ ] Replace `2500` with `22000` hash mode for `hashcat` as per [this article](https://hashcat.net/wiki/doku.php?id=cracking_wpawpa2)
