@@ -10,7 +10,7 @@ You must have `python3` installed. You will need to install any other outstandin
 
 | Command | Installation |
 | --- | --- |
-| `hashcat`, `libpcap`, `wget`, `hcxpcapngtool` | Install via [brew](https://brew.sh) by running `brew install hashcat libpcap wget hcxpcapngtool` |
+| `hashcat`, `libpcap`, `wget`, `hcxpcapngtool` | Install via [brew](https://brew.sh) by running `brew install hashcat libpcap wget hcxtools` |
 | `~/zizzania/src/zizzania` | Clone [this](https://github.com/cyrus-and/zizzania) repository then run `make -f config.Makefile && make` from inside the directory |
 
 ## Compatibility issues
