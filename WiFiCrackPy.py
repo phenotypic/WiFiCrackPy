@@ -14,7 +14,7 @@ parser.add_argument('-m')
 parser.add_argument('-i')
 parser.add_argument('-p')
 parser.add_argument('-d', action='store_false')
-parser.add_argument('-O', action='store_false')
+parser.add_argument('-o', action='store_false')
 args = parser.parse_args()
 
 
@@ -83,13 +83,13 @@ def crack_capture():
         wordlist = args.w
 
     if method == 1:
-        subprocess.run(['hashcat', '-m', '22000', 'capture.hc22000', wordlist] + ['-O'] * args.O)
+        subprocess.run(['hashcat', '-m', '22000', 'capture.hc22000', wordlist] + ['-O'] * args.o)
     elif method == 2:
         if args.p is None:
             pattern = input('\nInput a brute-force pattern: ')
         else:
             pattern = args.p
-        subprocess.run(['hashcat', '-m', '22000', '-a', '3', 'capture.hc22000', pattern] + ['-O'] * args.O)
+        subprocess.run(['hashcat', '-m', '22000', '-a', '3', 'capture.hc22000', pattern] + ['-O'] * args.o)
     else:
         print('\nRun hashcat against: capture.hc22000')
 
