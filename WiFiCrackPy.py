@@ -14,7 +14,7 @@ parser.add_argument('-m')
 parser.add_argument('-i')
 parser.add_argument('-p')
 parser.add_argument('-d', action='store_false')
-parser.add_argument('-o', action='store_false')
+parser.add_argument('-o', action='store_true')
 args = parser.parse_args()
 
 
