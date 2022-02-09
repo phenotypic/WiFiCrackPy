@@ -45,10 +45,10 @@ def scan_networks():
     print(list)
 
     x = int(input('\nSelect a network to crack: '))
-    capture_network(networks[x]['bssid'], networks[x]['ssid'], networks[x]['channel'])
+    capture_network(networks[x]['bssid'], networks[x]['channel'])
 
 
-def capture_network(bssid, ssid, channel):
+def capture_network(bssid, channel):
     subprocess.run(['sudo', airport, '-z'])
     subprocess.run(['sudo', airport, '-c' + channel])
 
