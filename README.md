@@ -16,7 +16,6 @@ You must have `python3` installed. You will need to install any other outstandin
 ## Compatibility issues
 
 - `zizzania` has the ability to send deauthentication frames to force a handshake. This feature is disabled by default as there are major compatibility issues with newer Macs (~2018 onwards)
-- `hashcat` currently has major compatibility issues with Apple silicon Macs. Cracking may not be possible on these Macs so you can use the manual option to export the capture
 
 ## Usage
 
