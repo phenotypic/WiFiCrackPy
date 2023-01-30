@@ -22,6 +22,7 @@ You must have `python3` installed. You will need to install any other outstandin
 Download with:
 ```
 git clone https://github.com/phenotypic/WiFiCrackPy.git
+cd WifiCrackPy
 pip3 install -r requirements.txt
 ```
 
