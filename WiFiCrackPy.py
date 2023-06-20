@@ -26,7 +26,7 @@ def scan_networks():
     count = len(scan) - 1
     scan = [o.split() for o in scan]
 
-    list = PrettyTable(['Number', 'Name', 'BSSID', 'RSSI', 'Channel', 'Security'])
+    scan_result = PrettyTable(['Number', 'Name', 'BSSID', 'RSSI', 'Channel', 'Security'])
     networks = {}
     for i in range(1, count):
         bssid = re.search('([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})', ' '.join(scan[i])).group(0)
@@ -40,9 +40,9 @@ def scan_networks():
         network['security'] = scan[i][bindex + 5].split('(')[0]
 
         networks[i] = network
-        list.add_row([i, network['ssid'], network['bssid'], network['rssi'], network['channel'], network['security']])
+        scan_result.add_row([i, network['ssid'], network['bssid'], network['rssi'], network['channel'], network['security']])
 
-    print(list)
+    print(scan_result)
 
     x = int(input('\nSelect a network to crack: '))
     capture_network(networks[x]['bssid'], networks[x]['channel'])
