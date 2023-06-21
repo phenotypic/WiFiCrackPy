@@ -13,19 +13,24 @@ You must have `python3` installed. You will need to install any other outstandin
 | `hashcat`, `libpcap`, `wget`, `hcxpcapngtool` | Install via [brew](https://brew.sh) by running `brew install hashcat libpcap wget hcxtools` |
 | `~/zizzania/src/zizzania` | Clone [this](https://github.com/cyrus-and/zizzania) repository then run `make -f config.Makefile && make -j "$(sysctl -n hw.logicalcpu)"` from inside the directory |
 
-## Compatibility issues
-
-- `zizzania` has the ability to send deauthentication frames to force a handshake. This feature is disabled by default as there are major compatibility issues with newer Macs (~2018 onwards)
-
 ## Usage
 
-Download with:
+Clone the repository:
 ```
 git clone https://github.com/phenotypic/WiFiCrackPy.git
+```
+
+Change to the project directory:
+```
+cd WiFiCrackPy
+```
+
+Install dependencies:
+```
 pip3 install -r requirements.txt
 ```
 
-Run from the same directory with:
+Run the script:
 ```
 python3 WiFiCrackPy.py
 ```
@@ -48,3 +53,7 @@ Following the selection of a network, you may have to wait for a while for a han
 Once a handshake is captured, `hashcat` can be used to crack the Wi-Fi password. This step may take quite a while depending on several factors including your Mac's processing power and the attack method chosen. If successfull, you will be presented with the password for the target network.
 
 WiFiCrackPy retains the handshake in its directory if you would like to perform another type of attack against the capture.
+
+## Compatibility issues
+
+- `zizzania` has the ability to send deauthentication frames to force a handshake. This feature is disabled by default as there are major compatibility issues with newer Macs (~2018 onwards)
