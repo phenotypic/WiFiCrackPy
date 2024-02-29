@@ -24,7 +24,7 @@ def scan_networks():
     print('Scanning for networks...\n')
 
     # Scan for networks using airport
-    scan = subprocess.run(['sudo', airport_path, '-s'], stdout=subprocess.PIPE)
+    scan = subprocess.run([airport_path, '-s'], stdout=subprocess.PIPE)
     scan = scan.stdout.decode('utf-8').split('\n')
     count = len(scan) - 1
     scan = [o.split() for o in scan]
