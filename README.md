@@ -11,8 +11,8 @@ You must have `python3` installed. You will need to install any other outstandin
 | Command | Installation |
 | --- | --- |
 | `libpcap`, `wget`, `hcxpcapngtool` | Install via [brew](https://brew.sh) by running `brew install libpcap wget hcxtools` |
-| `~/zizzania/src/zizzania` | Clone [this](https://github.com/cyrus-and/zizzania) repository then run `make -f config.Makefile && make` from inside the directory |
-| `~/hashcat/hashcat` | Clone [this](https://github.com/hashcat/hashcat) repository then run `make` from inside the directory |
+| `~/zizzania/src/zizzania` | 1. Clone repository: `git clone https://github.com/cyrus-and/zizzania.git ~/zizzania`<br>2. Change directory: `cd ~/zizzania`<br>3. Build : `make -f config.Makefile && make` |
+| `~/hashcat/hashcat` | 1. Clone repository: `git clone https://github.com/hashcat/hashcat.git ~/hashcat`<br>2. Change directory: `cd ~/hashcat`<br>3. Build: `make` |
 
 ## Usage
 
