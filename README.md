@@ -57,4 +57,4 @@ WiFiCrackPy retains the handshake in its directory if you would like to perform 
 
 ## Compatibility issues
 
-- `zizzania` has the ability to send deauthentication frames to force a handshake. This feature is disabled by default as there are major compatibility issues with newer Macs (~2018 onwards)
+- `zizzania` has the ability to send deauthentication frames to force a handshake. This feature is disabled by default as there are major system stability issues in MacOS versions previous to MacOS 12 Monterey. From then onwards MacOS does not allow the feature altogether.
