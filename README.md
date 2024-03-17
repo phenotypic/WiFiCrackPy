@@ -36,7 +36,9 @@ Run the script:
 python3 WiFiCrackPy.py
 ```
 
-The script is fairly easy to use, simply run it using the command above and enter your `sudo` password when prompted. Here are some flags you can add:
+The script is fairly easy to use, simply run it using the command above and enter your `sudo` password when prompted. The script also requires authorisaiton for location services in order to perform Wi-Fi scanning.
+
+Here are some flags you can add:
 
 | Flag | Description |
 | --- | --- |
