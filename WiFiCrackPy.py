@@ -1,8 +1,12 @@
-import subprocess, re, argparse, CoreWLAN
+import subprocess, re, argparse, CoreWLAN, CoreLocation
 from prettytable import PrettyTable
 from tabulate import tabulate
 from os.path import expanduser, join
 from pyfiglet import Figlet
+from time import sleep
+
+f = Figlet(font='big')
+print('\n' + f.renderText('WiFiCrackPy'))
 
 # Define paths
 hashcat_path = join(expanduser('~'), 'hashcat', 'hashcat')
@@ -17,6 +21,22 @@ parser.add_argument('-p')
 parser.add_argument('-d', action='store_false')
 parser.add_argument('-o', action='store_true')
 args = parser.parse_args()
+
+# Initialise CoreLocation
+print('Obtaining authorisation for location services (required for WiFi scanning)...\n')
+location_manager = CoreLocation.CLLocationManager.alloc().init()
+location_manager.startUpdatingLocation()
+
+# Wait for location services to be authorised
+max_wait = 60
+for i in range(1, max_wait):
+    authorization_status = location_manager.authorizationStatus()
+    if authorization_status == 3 or authorization_status == 4:
+        print('Received authorisation, continuing...\n')
+        break
+    if i == max_wait-1:
+        exit('Unable to obtain authorisation, exiting...\n')
+    sleep(1)
 
 # Get the default WiFi interface
 cwlan_interface = CoreWLAN.CWInterface.interface()
@@ -38,7 +58,6 @@ def scan_networks():
             network['bssid'] = net.bssid()
             network['rssi'] = net.rssiValue()
             network['channel'] = net.channel()
-            print(type(net.channel()))
             
             # Extracting security type from the CWNetwork description
             network['security'] = re.search(r'security=(.*?)(,|$)', str(net)).group(1)
@@ -111,8 +130,5 @@ def crack_capture():
     else:
         print('\nRun hashcat against: capture.hc22000')
 
-
-f = Figlet(font='big')
-print('\n' + f.renderText('WiFiCrackPy'))
 
 scan_networks()
