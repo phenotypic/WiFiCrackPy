@@ -1,4 +1,4 @@
-import subprocess, re, argparse, CoreWLAN, CoreLocation
+import subprocess, re, argparse, objc
 from prettytable import PrettyTable
 from tabulate import tabulate
 from os.path import expanduser, join
@@ -12,6 +12,14 @@ print('\n' + f.renderText('WiFiCrackPy'))
 hashcat_path = join(expanduser('~'), 'hashcat', 'hashcat')
 zizzania_path = join(expanduser('~'), 'zizzania', 'src', 'zizzania')
 
+# Load CoreWLAN framework and CWInterface class
+objc.loadBundle('CoreWLAN', bundle_path='/System/Library/Frameworks/CoreWLAN.framework', module_globals=globals())
+CWInterface = objc.lookUpClass('CWInterface')
+
+# Load CoreLocation framework and CLLocationManager class
+objc.loadBundle('CoreLocation', bundle_path='/System/Library/Frameworks/CoreLocation.framework', module_globals=globals())
+CLLocationManager = objc.lookUpClass('CLLocationManager')
+
 # Parse arguments
 parser = argparse.ArgumentParser()
 parser.add_argument('-w')
@@ -24,7 +32,7 @@ args = parser.parse_args()
 
 # Initialise CoreLocation
 print('Obtaining authorisation for location services (required for WiFi scanning)...\n')
-location_manager = CoreLocation.CLLocationManager.alloc().init()
+location_manager = CLLocationManager.alloc().init()
 location_manager.startUpdatingLocation()
 
 # Wait for location services to be authorised
@@ -39,7 +47,7 @@ for i in range(1, max_wait):
     sleep(1)
 
 # Get the default WiFi interface
-cwlan_interface = CoreWLAN.CWInterface.interface()
+cwlan_interface = CWInterface.interface()
 
 def scan_networks():
     print('Scanning for networks...\n')
