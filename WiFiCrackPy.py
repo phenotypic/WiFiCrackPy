@@ -1,7 +1,6 @@
 import subprocess, re, argparse, objc
-from prettytable import PrettyTable
-from tabulate import tabulate
 from os.path import expanduser, join
+from prettytable import PrettyTable
 from pyfiglet import Figlet
 from time import sleep
 
@@ -111,9 +110,12 @@ def capture_network(bssid, channel):
 
 
 def crack_capture():
-    # Ask user to select a cracking method
+    # Ask user to select a cracking method from menu
     if args.m is None:
-        print(tabulate([[1, 'Dictionary'], [2, 'Brute-force'], [3, 'Manual']], headers=['Number', 'Mode']))
+        options = PrettyTable(['Number', 'Mode'])
+        for i, mode in enumerate(['Dictionary', 'Brute-force', 'Manual']):
+            options.add_row([i + 1, mode])
+        print(options)
         method = int(input('\nSelect an attack mode: '))
     else:
         method = int(args.m)
