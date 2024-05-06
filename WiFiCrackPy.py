@@ -54,26 +54,25 @@ def scan_networks():
     print('Scanning for networks...\n')
 
     # Scan for networks
-    scan_result, _ = cwlan_interface.scanForNetworksWithName_error_(None, None)
+    scan_results, _ = cwlan_interface.scanForNetworksWithName_error_(None, None)
 
     # Parse scan results and display in a table
     table = PrettyTable(['Number', 'Name', 'BSSID', 'RSSI', 'Channel', 'Security'])
     networks = {}
 
-    if scan_result is not None:
-        for i, net in enumerate(scan_result):
+    if scan_results is not None:
+        for i, result in enumerate(scan_results):
             # Store relevant network information
-            network = {
-                'bssid': net.bssid(),
-                'channel': net.wlanChannel()
+            networks[i] = {
+                'bssid': result.bssid(),
+                'channel': result.wlanChannel()
             }
-            networks[i] = network
             
             # Extract security type from the CWNetwork description
-            security_type = re.search(r'security=(.*?)(,|$)', str(net)).group(1)
+            security_type = re.search(r'security=(.*?)(,|$)', str(result)).group(1)
 
             # Add network to table
-            table.add_row([i + 1, net.ssid(), network['bssid'], net.rssiValue(), net.channel(), security_type])
+            table.add_row([i + 1, result.ssid(), result.bssid(), result.rssiValue(), result.channel(), security_type])
     else:
         print("No networks found or an error occurred.")
         quit()
