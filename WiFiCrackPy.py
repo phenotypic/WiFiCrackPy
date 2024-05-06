@@ -62,17 +62,18 @@ def scan_networks():
 
     if scan_result is not None:
         for i, net in enumerate(scan_result):
-            network = {}
-            network['ssid'] = net.ssid()
-            network['bssid'] = net.bssid()
-            network['rssi'] = net.rssiValue()
-            network['channel'] = net.channel()
-            
-            # Extracting security type from the CWNetwork description
-            network['security'] = re.search(r'security=(.*?)(,|$)', str(net)).group(1)
-
+            # Store relevant network information
+            network = {
+                'bssid': net.bssid(),
+                'channel': net.wlanChannel()
+            }
             networks[i] = network
-            table.add_row([i + 1, network['ssid'], network['bssid'], network['rssi'], network['channel'], network['security']])
+            
+            # Extract security type from the CWNetwork description
+            security_type = re.search(r'security=(.*?)(,|$)', str(net)).group(1)
+
+            # Add network to table
+            table.add_row([i + 1, net.ssid(), network['bssid'], net.rssiValue(), net.channel(), security_type])
     else:
         print("No networks found or an error occurred.")
         quit()
@@ -89,9 +90,7 @@ def capture_network(bssid, channel):
     cwlan_interface.disassociate()
 
     # Set the channel
-    available_channels = cwlan_interface.supportedWLANChannels()
-    desired_channel_obj = next((ch for ch in available_channels if ch.channelNumber() == int(channel)), None)
-    cwlan_interface.setWLANChannel_error_(desired_channel_obj, None)
+    cwlan_interface.setWLANChannel_error_(channel, None)
 
     # Determine the network interface
     if args.i is None:
