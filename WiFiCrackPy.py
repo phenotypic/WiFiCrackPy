@@ -12,9 +12,9 @@ print('\n' + f.renderText('WiFiCrackPy'))
 hashcat_path = join(expanduser('~'), 'hashcat', 'hashcat')
 zizzania_path = join(expanduser('~'), 'zizzania', 'src', 'zizzania')
 
-# Load CoreWLAN framework and CWInterface class
+# Load CoreWLAN framework and CWWiFiClient class
 objc.loadBundle('CoreWLAN', bundle_path='/System/Library/Frameworks/CoreWLAN.framework', module_globals=globals())
-CWInterface = objc.lookUpClass('CWInterface')
+CWWiFiClient = objc.lookUpClass('CWWiFiClient')
 
 # Load CoreLocation framework and CLLocationManager class
 objc.loadBundle('CoreLocation', bundle_path='/System/Library/Frameworks/CoreLocation.framework', module_globals=globals())
@@ -47,7 +47,8 @@ for i in range(1, max_wait):
     sleep(1)
 
 # Get the default WiFi interface
-cwlan_interface = CWInterface.interface()
+cwlan_client = CWWiFiClient.sharedWiFiClient()
+cwlan_interface = cwlan_client.interface()
 
 def scan_networks():
     print('Scanning for networks...\n')
