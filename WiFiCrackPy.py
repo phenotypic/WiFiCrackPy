@@ -1,6 +1,8 @@
 import subprocess, re, argparse, objc
 from os.path import expanduser, join
 from prettytable import PrettyTable
+import operator
+from prettytable import PrettyTable
 from pyfiglet import Figlet
 from time import sleep
 
@@ -76,7 +78,9 @@ def scan_networks():
         print("No networks found or an error occurred.")
         quit()
 
-    print(table)
+    # Sort table by RSSI and then by Name
+    sortedTable = table.get_string(sort_key=operator.itemgetter(2, 4), sortby="Name") 
+    print(sortedTable)
 
     # Ask user to select a network to crack
     x = int(input('\nSelect a network to crack: ')) - 1
