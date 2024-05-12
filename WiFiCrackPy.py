@@ -22,18 +22,25 @@ parser.add_argument('-o', action='store_true')
 args = parser.parse_args()
 
 # Initialise CoreLocation
-print('Obtaining authorisation for location services (required for WiFi scanning)...')
 location_manager = CoreLocation.CLLocationManager.alloc().init()
-location_manager.startUpdatingLocation()
+
+# Check if location services are enabled
+if not location_manager.locationServicesEnabled():
+    exit('Location services are disabled, please enable them and try again...')
+
+# Request authorisation for location services
+print('Requesting authorisation for location services (required for WiFi scanning)...')
+location_manager.requestWhenInUseAuthorization()
 
 # Wait for location services to be authorised
 max_wait = 60
-for i in range(1, max_wait):
+for i in range(max_wait):
     authorization_status = location_manager.authorizationStatus()
-    if authorization_status == 3 or authorization_status == 4:
+    # 0 = not determined, 1 = restricted, 2 = denied, 3 = authorised always, 4 = authorised when in use
+    if authorization_status in [3, 4]:
         print('Received authorisation, continuing...')
         break
-    if i == max_wait-1:
+    if i > max_wait:
         exit('Unable to obtain authorisation, exiting...')
     sleep(1)
 
@@ -83,8 +90,7 @@ def scan_networks():
             coloured_rssi = colourise_rssi(network['rssi'])
             table.add_row([i + 1, network['ssid'], network['bssid'], coloured_rssi, network['channel_number'], network['security']])
     else:
-        print("No networks found or an error occurred.")
-        quit()
+        exit('No networks found or an error occurred. Exiting...')
 
     print(table)
 
