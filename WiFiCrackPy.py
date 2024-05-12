@@ -1,4 +1,4 @@
-import subprocess, re, argparse, objc
+import subprocess, re, argparse, CoreWLAN, CoreLocation
 from os.path import expanduser, join
 from prettytable import PrettyTable
 from pyfiglet import Figlet
@@ -11,14 +11,6 @@ print('\n' + f.renderText('WiFiCrackPy'))
 hashcat_path = join(expanduser('~'), 'hashcat', 'hashcat')
 zizzania_path = join(expanduser('~'), 'zizzania', 'src', 'zizzania')
 
-# Load CoreWLAN framework and CWWiFiClient class
-objc.loadBundle('CoreWLAN', bundle_path='/System/Library/Frameworks/CoreWLAN.framework', module_globals=globals())
-CWWiFiClient = objc.lookUpClass('CWWiFiClient')
-
-# Load CoreLocation framework and CLLocationManager class
-objc.loadBundle('CoreLocation', bundle_path='/System/Library/Frameworks/CoreLocation.framework', module_globals=globals())
-CLLocationManager = objc.lookUpClass('CLLocationManager')
-
 # Parse arguments
 parser = argparse.ArgumentParser()
 parser.add_argument('-w')
@@ -30,8 +22,8 @@ parser.add_argument('-o', action='store_true')
 args = parser.parse_args()
 
 # Initialise CoreLocation
-print('Obtaining authorisation for location services (required for WiFi scanning)...\n')
-location_manager = CLLocationManager.alloc().init()
+print('Obtaining authorisation for location services (required for WiFi scanning)...')
+location_manager = CoreLocation.CLLocationManager.alloc().init()
 location_manager.startUpdatingLocation()
 
 # Wait for location services to be authorised
@@ -39,39 +31,57 @@ max_wait = 60
 for i in range(1, max_wait):
     authorization_status = location_manager.authorizationStatus()
     if authorization_status == 3 or authorization_status == 4:
-        print('Received authorisation, continuing...\n')
+        print('Received authorisation, continuing...')
         break
     if i == max_wait-1:
-        exit('Unable to obtain authorisation, exiting...\n')
+        exit('Unable to obtain authorisation, exiting...')
     sleep(1)
 
 # Get the default WiFi interface
-cwlan_client = CWWiFiClient.sharedWiFiClient()
+cwlan_client = CoreWLAN.CWWiFiClient.sharedWiFiClient()
 cwlan_interface = cwlan_client.interface()
 
+def colourise_rssi(rssi):
+    if rssi > -60:
+        # Green for strong signal
+        return f"\033[92m{rssi}\033[0m"
+    elif rssi > -80:
+        # Yellow for moderate signal
+        return f"\033[93m{rssi}\033[0m"
+    else:
+        # Red for weak signal
+        return f"\033[91m{rssi}\033[0m"
+
 def scan_networks():
-    print('Scanning for networks...\n')
+    print('\nScanning for networks...\n')
 
     # Scan for networks
     scan_results, _ = cwlan_interface.scanForNetworksWithName_error_(None, None)
 
     # Parse scan results and display in a table
     table = PrettyTable(['Number', 'Name', 'BSSID', 'RSSI', 'Channel', 'Security'])
-    networks = {}
+    networks = []
 
     if scan_results is not None:
         for i, result in enumerate(scan_results):
             # Store relevant network information
-            networks[i] = {
+            network_info = {
+                'ssid': result.ssid(),
                 'bssid': result.bssid(),
-                'channel': result.wlanChannel()
+                'rssi': result.rssiValue(),
+                'channel_object': result.wlanChannel(),
+                'channel_number': result.channel(),
+                'security': re.search(r'security=(.*?)(,|$)', str(result)).group(1)
             }
-            
-            # Extract security type from the CWNetwork description
-            security_type = re.search(r'security=(.*?)(,|$)', str(result)).group(1)
+            networks.append(network_info)
 
-            # Add network to table
-            table.add_row([i + 1, result.ssid(), result.bssid(), result.rssiValue(), result.channel(), security_type])
+         # Sort networks by RSSI value, descending
+        networks_sorted = sorted(networks, key=lambda x: x['rssi'], reverse=True)
+
+        # Add sorted networks to table
+        for i, network in enumerate(networks_sorted):
+            coloured_rssi = colourise_rssi(network['rssi'])
+            table.add_row([i + 1, network['ssid'], network['bssid'], coloured_rssi, network['channel_number'], network['security']])
     else:
         print("No networks found or an error occurred.")
         quit()
@@ -80,7 +90,7 @@ def scan_networks():
 
     # Ask user to select a network to crack
     x = int(input('\nSelect a network to crack: ')) - 1
-    capture_network(networks[x]['bssid'], networks[x]['channel'])
+    capture_network(networks_sorted[x]['bssid'], networks_sorted[x]['channel_object'])
 
 
 def capture_network(bssid, channel):
