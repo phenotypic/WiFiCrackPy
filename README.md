@@ -60,3 +60,4 @@ WiFiCrackPy retains the handshake in its directory if you would like to perform 
 ## Compatibility issues
 
 - `zizzania` has the ability to send deauthentication frames to force a handshake. This feature is disabled by default as frame injection is not possible from macOS 12 (Monterey) onwards.
+- A permissions issue with Apple's [CoreWLAN](https://developer.apple.com/documentation/corewlan) framework (loaded through the [`PyObjC`](https://github.com/ronaldoussoren/pyobjc) library) means that the script sometimes returns `None` for network SSID/BSSIDs, even if the relevant permissions are granted. See [#19](/../../issues/19) for more information.
