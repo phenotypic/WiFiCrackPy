@@ -6,7 +6,11 @@ The script captures the necessary Wi-Fi packets associated with WPA(2) handshake
 
 ## Prerequisites
 
-You must have `python3` installed. You will need to install any other outstanding requirements:
+You must have `python3` installed.
+
+> **Important:** Use the [official Python installer for macOS](https://www.python.org/downloads/mac-osx/) instead of installing Python via Homebrew. Homebrew installs Python with *ad-hoc code signing*, which causes macOS to deny location access required by the script. The official installer signs Python with proper entitlements, allowing full functionality.
+
+You will also need to install any other outstanding requirements:
 
 | Command | Installation |
 | --- | --- |
@@ -57,7 +61,6 @@ Once a handshake is captured, `hashcat` can be used to crack the Wi-Fi password.
 
 WiFiCrackPy retains the handshake in its directory if you would like to perform another type of attack against the capture.
 
-## Compatibility issues
+## Compatibility
 
 - `zizzania` has the ability to send deauthentication frames to force a handshake. This feature is disabled by default as frame injection is not possible from macOS 12 (Monterey) onwards.
-- A permissions issue with Apple's [CoreWLAN](https://developer.apple.com/documentation/corewlan) framework (loaded through the [`PyObjC`](https://github.com/ronaldoussoren/pyobjc) library) means that the script sometimes returns `None` for network SSID/BSSIDs, even if the relevant permissions are granted. See [#19](/../../issues/19) for more information.
